@@ -8,7 +8,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "resume-auto-terraform-state"
+    bucket = "resumes-auto-terraform-state"
     key    = "terraform.tfstate"
     region = "us-east-2"
   }
