@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { FiDownload, FiChevronLeft, FiPrinter } from 'react-icons/fi';
+import { FiDownload, FiPrinter } from 'react-icons/fi';
 import { Document, Packer, Paragraph, Table, TableCell, TableRow, TextRun, BorderStyle, AlignmentType, WidthType, ShadingType, VerticalAlign } from 'docx';
 import { saveAs } from 'file-saver';
 
 // PricingDisplay component to show token usage and cost
 const PricingDisplay = ({ resumeData }) => {
-  // Extract token stats if available
+
   const tokenStats = resumeData?.tokenStats;
-  
+
   if (!tokenStats) return null;
-  
+
   return (
     <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-ocean-blue rounded-xl shadow-md">
       <h3 className="text-lg font-semibold text-ocean-dark mb-4 flex items-center">
@@ -43,7 +43,7 @@ const PricingDisplay = ({ resumeData }) => {
   );
 };
 
-const GeneratedResume = ({ resumeData, onBack }) => {
+const GeneratedResume = ({ resumeData }) => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Function to handle resume download is removed in favor of Word document generation
@@ -232,27 +232,45 @@ const GeneratedResume = ({ resumeData, onBack }) => {
             children: [
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: edu.degree || '' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: edu.degree || '-', font: "Calibri", size: 22 })]
+                })],
               }),
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: edu.areaOfStudy || '' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: edu.areaOfStudy || '-', font: "Calibri", size: 22 })]
+                })],
               }),
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: edu.school || '' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: edu.school || '-', font: "Calibri", size: 22 })]
+                })],
               }),
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: edu.location || '' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: edu.location || '-', font: "Calibri", size: 22 })]
+                })],
               }),
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: edu.wasAwarded ? 'Yes' : 'No' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: edu.wasAwarded ? 'Yes' : 'No' || '-', font: "Calibri", size: 22 })]
+                })],
               }),
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: edu.date || '-' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: edu.date || '-', font: "Calibri", size: 22 })]
+                })],
               }),
             ],
           })
@@ -264,9 +282,46 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         new TableRow({
           children: [
             new TableCell({
-              columnSpan: 6,
               verticalAlign: VerticalAlign.CENTER,
-              children: [new Paragraph({ alignment: AlignmentType.CENTER, text: '-' })],
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
+            }),
+            new TableCell({
+              verticalAlign: VerticalAlign.CENTER,
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
+            }),
+            new TableCell({
+              verticalAlign: VerticalAlign.CENTER,
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
+            }),
+            new TableCell({
+              verticalAlign: VerticalAlign.CENTER,
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
+            }),
+            new TableCell({
+              verticalAlign: VerticalAlign.CENTER,
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
+            }),
+            new TableCell({
+              verticalAlign: VerticalAlign.CENTER,
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
             }),
           ],
         })
@@ -470,23 +525,38 @@ const GeneratedResume = ({ resumeData, onBack }) => {
             children: [
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: cert.name || '' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: cert.name || '-', font: "Calibri", size: 22 })]
+                })],
               }),
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: cert.issuedBy || '' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: cert.issuedBy || '-', font: "Calibri", size: 22 })]
+                })],
               }),
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: cert.dateObtained || '' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: cert.dateObtained || '-', font: "Calibri", size: 22 })]
+                })],
               }),
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: cert.certificationNumber || '-' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: cert.certificationNumber || '-', font: "Calibri", size: 22 })]
+                })],
               }),
               new TableCell({
                 verticalAlign: VerticalAlign.CENTER,
-                children: [new Paragraph({ alignment: AlignmentType.CENTER, text: cert.expirationDate || '-' })],
+                children: [new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [new TextRun({ text: cert.expirationDate || '-', font: "Calibri", size: 22 })]
+                })],
               }),
             ],
           })
@@ -498,9 +568,39 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         new TableRow({
           children: [
             new TableCell({
-              columnSpan: 5,
               verticalAlign: VerticalAlign.CENTER,
-              children: [new Paragraph({ alignment: AlignmentType.CENTER, text: '-' })],
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
+            }),
+            new TableCell({
+              verticalAlign: VerticalAlign.CENTER,
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
+            }),
+            new TableCell({
+              verticalAlign: VerticalAlign.CENTER,
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
+            }),
+            new TableCell({
+              verticalAlign: VerticalAlign.CENTER,
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
+            }),
+            new TableCell({
+              verticalAlign: VerticalAlign.CENTER,
+              children: [new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: '-', font: "Calibri", size: 22 })]
+              })],
             }),
           ],
         })
@@ -551,11 +651,11 @@ const GeneratedResume = ({ resumeData, onBack }) => {
   // Helper function to create employment history content
   const createEmploymentHistory = (resumeData) => {
     const paragraphs = [];
-    
+
     if (resumeData.employmentHistory && resumeData.employmentHistory.length > 0) {
       // Sort employment history by workPeriod if available
       const sortedEmploymentHistory = [...resumeData.employmentHistory];
-      
+
       sortedEmploymentHistory.forEach((job, index) => {
         // Add spacing before each employment history except the first one
         if (index > 0) {
@@ -565,7 +665,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
             })
           );
         }
-        
+
         // Company row with date right-aligned
         paragraphs.push(
           new Table({
@@ -586,7 +686,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                 children: [
                   new TableCell({
                     width: {
-                      size: 50,
+                      size: 70,
                       type: WidthType.PERCENTAGE
                     },
                     children: [
@@ -604,7 +704,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   }),
                   new TableCell({
                     width: {
-                      size: 50,
+                      size: 30,
                       type: WidthType.PERCENTAGE
                     },
                     children: [
@@ -626,7 +726,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
             ]
           })
         );
-        
+
         // Job title row with location right-aligned
         paragraphs.push(
           new Table({
@@ -647,7 +747,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                 children: [
                   new TableCell({
                     width: {
-                      size: 50,
+                      size: 70,
                       type: WidthType.PERCENTAGE
                     },
                     children: [
@@ -665,7 +765,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   }),
                   new TableCell({
                     width: {
-                      size: 50,
+                      size: 30,
                       type: WidthType.PERCENTAGE
                     },
                     children: [
@@ -687,262 +787,120 @@ const GeneratedResume = ({ resumeData, onBack }) => {
             ]
           })
         );
-        
-        if (job.project) {
-          paragraphs.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: 'Project:',
-                  bold: true,
-                  size: 22,
-                  color: '000000',
-                  font: "Calibri"
-                }),
-                new TextRun({
-                  text: ' ' + job.project,
-                  bold: true,
-                  size: 22,
-                  font: "Calibri",
-                  color: '000000'
-                }),
-              ],
-            })
-          );
-        }
-        
-        // Project Role
-        if (job.projectRole) {
-          paragraphs.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: 'Project Role:',
-                  bold: true,
-                  size: 22,
-                  color: '000000',
-                  font: "Calibri"
-                }),
-                new TextRun({
-                  text: ' ' + job.projectRole,
-                  bold: true,
-                  size: 22,
-                  font: "Calibri",
-                  color: '000000'
-                }),
-              ],
-            })
-          );
-        }
-        
-        // Project Description
-        if (job.projectDescription) {
-          paragraphs.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: 'Project Description:',
-                  bold: true,
-                  size: 22,
-                  color: '000000',
-                  font: "Calibri"
-                }),
-                new TextRun({
-                  text: ' ' + job.projectDescription,
-                  size: 22,
-                  font: "Calibri",
-                  color: '000000'
-                }),
-              ],
-            })
-          );
-        }
-        
-        // Project Environment
-        if (job.projectEnvironment) {
-          paragraphs.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: 'Project Environment:',
-                  bold: true,
-                  size: 22,
-                  color: '000000',
-                  font: "Calibri"
-                }),
-                new TextRun({
-                  text: ' ' + job.projectEnvironment,
-                  size: 22,
-                  font: "Calibri",
-                  color: '000000'
-                }),
-              ],
-            })
-          );
-        }
-        
-        // Client
-        if (job.client) {
-          paragraphs.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: 'Client:',
-                  bold: true,
-                  size: 22,
-                  color: '000000',
-                  font: "Calibri"
-                }),
-                new TextRun({
-                  text: ' ' + job.client,
-                  bold: true,
-                  size: 22,
-                  font: "Calibri",
-                  color: '000000'
-                }),
-              ],
-            })
-          );
-        }
-        
-        // Customer
-        if (job.customer) {
-          paragraphs.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: 'Customer:',
-                  bold: true,
-                  size: 22,
-                  color: '000000',
-                  font: "Calibri"
-                }),
-                new TextRun({
-                  text: ' ' + job.customer,
-                  bold: true,
-                  size: 22,
-                  font: "Calibri",
-                  color: '000000'
-                }),
-              ],
-            })
-          );
-        }
-        
-        // Description
-        if (job.description) {
-          paragraphs.push(
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: 'Description:',
-                  bold: true,
-                  size: 22,
-                  color: '000000',
-                  font: "Calibri"
-                }),
-                new TextRun({
-                  text: ' ' + job.description,
-                  size: 22,
-                  font: "Calibri",
-                  color: '000000'
-                }),
-              ],
-            })
-          );
-        }
-        
-        // Client Projects
-        if (job.clientProjects && job.clientProjects.length > 0) {
-          paragraphs.push(
-            new Paragraph({
-              spacing: {
-                before: 200
-              },
-              children: [
-                new TextRun({
-                  text: 'Client Projects:',
-                  bold: true,
-                  size: 22,
-                  color: '000000',
-                  font: "Calibri"
-                }),
-              ],
-            })
-          );
-          
-          job.clientProjects.forEach(clientProject => {
-            // Client Project header
-            const projectTitle = clientProject.clientName && clientProject.projectName 
-              ? `${clientProject.clientName} - ${clientProject.projectName}`
-              : clientProject.clientName || clientProject.projectName || 'Client Project';
+
+
+        // Projects
+        if (job.projects && job.projects.length > 0) {
+
+
+          job.projects.forEach(project => {
+            // Project header with duration in same line (right-aligned)
+            let projectTitle = project.projectName || 'Project';
             
+            // Add location to project title if projectLocation exists
+            if (project.projectLocation) {
+              projectTitle = `${projectTitle} - ${project.projectLocation}`;
+            }
+
             paragraphs.push(
-              new Paragraph({
-                spacing: {
-                  before: 120
+              new Table({
+                width: {
+                  size: 100,
+                  type: WidthType.PERCENTAGE,
                 },
-                children: [
-                  new TextRun({
-                    text: projectTitle,
-                    bold: true,
-                    size: 20,
-                    color: '0F3E78',
-                    font: "Calibri"
-                  }),
-                ],
+                borders: {
+                  top: { style: BorderStyle.NONE },
+                  bottom: { style: BorderStyle.NONE },
+                  left: { style: BorderStyle.NONE },
+                  right: { style: BorderStyle.NONE },
+                  insideHorizontal: { style: BorderStyle.NONE },
+                  insideVertical: { style: BorderStyle.NONE },
+                },
+                rows: [
+                  new TableRow({
+                    children: [
+                      new TableCell({
+                        width: {
+                          size: 70,
+                          type: WidthType.PERCENTAGE
+                        },
+                        children: [
+                          new Paragraph({
+                            spacing: {
+                              before: 120
+                            },
+                            children: [
+                              new TextRun({
+                                text: projectTitle,
+                                bold: true,
+                                size: 22,
+                                color: '000000',
+                                font: "Calibri"
+                              }),
+                            ],
+                          })
+                        ],
+                      }),
+                      new TableCell({
+                        width: {
+                          size: 30,
+                          type: WidthType.PERCENTAGE
+                        },
+                        children: [
+                          new Paragraph({
+                            alignment: AlignmentType.RIGHT,
+                            spacing: {
+                              before: 120
+                            },
+                            children: [
+                              new TextRun({
+                                text: project.period || '',
+                                bold: true,
+                                size: 22,
+                                color: '000000',
+                                font: "Calibri"
+                              })
+                            ]
+                          })
+                        ],
+                      })
+                    ]
+                  })
+                ]
               })
             );
-            
-            // Project period
-            if (clientProject.period) {
+
+            // Project responsibilities with heading
+            if (project.projectResponsibilities && project.projectResponsibilities.length > 0) {
               paragraphs.push(
                 new Paragraph({
                   children: [
                     new TextRun({
-                      text: 'Duration: ' + clientProject.period,
-                      italic: true,
-                      size: 20,
-                      color: '666666',
+                      text: 'Responsibilities',
+                      bold: true,
+                      size: 22,
+                      color: '000000',
                       font: "Calibri"
                     }),
                   ],
                 })
               );
-            }
-            
-            // Project description
-            if (clientProject.projectDescription) {
-              paragraphs.push(
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: clientProject.projectDescription,
-                      size: 20,
-                      font: "Calibri",
-                      color: '000000'
-                    }),
-                  ],
-                })
-              );
-            }
-            
-            // Project responsibilities
-            if (clientProject.responsibilities && clientProject.responsibilities.length > 0) {
-              clientProject.responsibilities.forEach(resp => {
-                if (resp.trim()) {
+
+              project.projectResponsibilities.forEach(responsibility => {
+                if (responsibility.trim()) {
                   paragraphs.push(
                     new Paragraph({
+                      alignment: AlignmentType.JUSTIFIED,
                       bullet: {
-                        level: 1
+                        level: 0
                       },
                       indent: {
-                        left: 450
+                        left: 350
                       },
                       children: [
                         new TextRun({
-                          text: resp,
-                          size: 20,
+                          text: responsibility,
+                          size: 22,
                           font: "Calibri",
                           color: '000000'
                         }),
@@ -952,9 +910,33 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                 }
               });
             }
+
+            // Project key technologies
+            if (project.keyTechnologies) {
+              paragraphs.push(
+                new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
+                  children: [
+                    new TextRun({
+                      text: 'Key Technologies/Skills: ',
+                      bold: true,
+                      size: 22,
+                      font: "Calibri",
+                      color: '000000'
+                    }),
+                    new TextRun({
+                      text: project.keyTechnologies,
+                      size: 22,
+                      font: "Calibri",
+                      color: '000000'
+                    }),
+                  ],
+                })
+              );
+            }
           });
         }
-        
+
         // General Responsibilities
         if (job.responsibilities && job.responsibilities.length > 0 && job.responsibilities.some(r => r.trim())) {
           paragraphs.push(
@@ -970,11 +952,12 @@ const GeneratedResume = ({ resumeData, onBack }) => {
               ],
             })
           );
-          
+
           job.responsibilities.forEach(resp => {
             if (resp.trim()) {
               paragraphs.push(
                 new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
                   bullet: {
                     level: 0
                   },
@@ -994,7 +977,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
             }
           });
         }
-        
+
         // Subsections
         if (job.subsections && job.subsections.length > 0) {
           job.subsections.forEach(subsection => {
@@ -1016,13 +999,14 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   ],
                 })
               );
-              
+
               // Add subsection content as bullet points
               if (subsection.content && subsection.content.length > 0) {
                 subsection.content.forEach(item => {
                   if (item.trim()) {
                     paragraphs.push(
                       new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
                         bullet: {
                           level: 0
                         },
@@ -1045,11 +1029,14 @@ const GeneratedResume = ({ resumeData, onBack }) => {
             }
           });
         }
-        
+
+
+
         // Key Technologies/Skills
         if (job.keyTechnologies) {
           paragraphs.push(
             new Paragraph({
+              alignment: AlignmentType.JUSTIFIED,
               spacing: {
                 before: 200
               },
@@ -1071,75 +1058,6 @@ const GeneratedResume = ({ resumeData, onBack }) => {
             })
           );
         }
-        
-        // Environment
-        if (job.environment) {
-          paragraphs.push(
-            new Paragraph({
-              spacing: {
-                before: 200
-              },
-              children: [
-                new TextRun({
-                  text: 'Environment:',
-                  bold: true,
-                  size: 22,
-                  color: '000000',
-                  font: "Calibri"
-                }),
-                new TextRun({
-                  text: ' ' + job.environment,
-                  size: 22,
-                  font: "Calibri",
-                  color: '000000'
-                }),
-              ],
-            })
-          );
-        }
-        
-        // Achievements
-        if (job.achievements && job.achievements.length > 0) {
-          paragraphs.push(
-            new Paragraph({
-              spacing: {
-                before: 200
-              },
-              children: [
-                new TextRun({
-                  text: 'Achievements:',
-                  bold: true,
-                  size: 22,
-                  color: '000000',
-                  font: "Calibri"
-                }),
-              ],
-            })
-          );
-          
-          job.achievements.forEach(achievement => {
-            if (achievement.trim()) {
-              paragraphs.push(
-                new Paragraph({
-                  bullet: {
-                    level: 0
-                  },
-                  indent: {
-                    left: 350
-                  },
-                  children: [
-                    new TextRun({
-                      text: achievement,
-                      size: 22,
-                      font: "Calibri",
-                      color: '000000'
-                    }),
-                  ],
-                })
-              );
-            }
-          });
-        }
       });
     } else {
       paragraphs.push(
@@ -1152,19 +1070,20 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         })
       );
     }
-    
+
     return paragraphs;
   };
 
   // Helper function to create technical skills content
   const createTechnicalSkills = (resumeData) => {
     const paragraphs = [];
-    
+
     // Legacy format skills
     if (resumeData.technicalSkills && Object.keys(resumeData.technicalSkills).length > 0) {
       Object.entries(resumeData.technicalSkills).forEach(([category, skills]) => {
         paragraphs.push(
           new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
             children: [
               new TextRun({
                 text: category + ': ',
@@ -1184,13 +1103,14 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         );
       });
     }
-    
+
     // Nested skill categories
     if (resumeData.skillCategories && resumeData.skillCategories.length > 0) {
       resumeData.skillCategories.forEach(category => {
         // Category name with skills on the same line
         paragraphs.push(
           new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
             children: [
               new TextRun({
                 text: (category.categoryName || 'Category') + ': ',
@@ -1208,15 +1128,16 @@ const GeneratedResume = ({ resumeData, onBack }) => {
             ],
           })
         );
-        
+
         // Main skills are now included with the category name
-        
+
         // Subcategories - ensure they exist and are properly handled
         if (category.subCategories && Array.isArray(category.subCategories) && category.subCategories.length > 0) {
           category.subCategories.forEach(subCategory => {
             // Subcategory name with skills on the same line
             paragraphs.push(
               new Paragraph({
+                alignment: AlignmentType.JUSTIFIED,
                 spacing: {
                   before: 120,
                 },
@@ -1244,10 +1165,11 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         }
       });
     }
-    
+
     if (paragraphs.length === 0) {
       paragraphs.push(
         new Paragraph({
+          alignment: AlignmentType.JUSTIFIED,
           children: [
             new TextRun({
               text: 'No skills provided',
@@ -1259,16 +1181,16 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         })
       );
     }
-    
+
     return paragraphs;
   };
 
   // Helper function to handle Word document generation and download
   const handleDownloadWord = async () => {
     if (!resumeData) return;
-    
+
     setIsGenerating(true);
-    
+
     try {
       // Create a new Word document
       const doc = new Document({
@@ -1297,7 +1219,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   })
                 ]
               }),
-              
+
               // Title/Role and Requisition Number in a single row using table
               new Table({
                 width: {
@@ -1356,9 +1278,9 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                         children: [
                           new Paragraph({
                             alignment: AlignmentType.RIGHT,
-                            
+
                             children: [
-                              new TextRun({ 
+                              new TextRun({
                                 text: 'VectorVMS Requisition Number: ',
                                 bold: true,
                                 size: 28,
@@ -1369,7 +1291,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                           new Paragraph({
                             alignment: AlignmentType.LEFT,
                             indent: {
-                              left: 1200 
+                              left: 1200
                             },
                             children: [
                               new TextRun({
@@ -1385,7 +1307,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   })
                 ]
               }),
-              
+
               // Education Section
               new Paragraph({
                 spacing: {
@@ -1401,10 +1323,10 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   })
                 ]
               }),
-              
+
               // Education Table
               createEducationTable(resumeData),
-              
+
               // Certifications Section
               new Paragraph({
                 spacing: {
@@ -1420,10 +1342,10 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   })
                 ]
               }),
-              
+
               // Certifications Table
               createCertificationsTable(resumeData),
-              
+
               // Employment History Section
               new Paragraph({
                 spacing: {
@@ -1439,15 +1361,14 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   })
                 ]
               }),
-              
+
               // Employment History Content
               ...createEmploymentHistory(resumeData),
 
               // Professional Summary Section
               new Paragraph({
                 spacing: {
-                  before: 400,
-                  after: 200
+                  before: 400
                 },
                 children: [
                   new TextRun({
@@ -1458,10 +1379,11 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   })
                 ]
               }),
-              
+
               // Professional Summary Content
               ...(resumeData.professionalSummary || []).map(point => (
                 new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
                   bullet: {
                     level: 0
                   },
@@ -1478,49 +1400,49 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   ]
                 })
               )),
-              
-                              // Summary subsections - support both formats
-                ...(resumeData.summarySections || resumeData.subsections || []).flatMap(subsection => [
-                  // Subsection title
-                  new Paragraph({
-                    spacing: {
-                      before: 200,
-                      after: 100
-                    },
-                    children: [
-                      new TextRun({
-                        text: subsection.title || '',
-                        bold: true,
-                        size: 22,
-                        font: "Calibri",
-                        color: '000000'
-                      })
-                    ]
-                  }),
-                  // Subsection content (only if there is content)
-                  ...(subsection.content && subsection.content.length > 0 
-                    ? subsection.content.map(item => (
-                        new Paragraph({
-                          bullet: {
-                            level: 0
-                          },
-                          indent: {
-                            left: 350
-                          },
-                          children: [
-                            new TextRun({
-                              text: item,
-                              size: 22,
-                              font: "Calibri",
-                              color: '000000'
-                            })
-                          ]
+
+              // Summary subsections - support both formats
+              ...(resumeData.summarySections || resumeData.subsections || []).flatMap(subsection => [
+                // Subsection title
+                new Paragraph({
+                  spacing: {
+                    before: 100
+                  },
+                  children: [
+                    new TextRun({
+                      text: subsection.title || '',
+                      bold: true,
+                      size: 22,
+                      font: "Calibri",
+                      color: '000000'
+                    })
+                  ]
+                }),
+                // Subsection content (only if there is content)
+                ...(subsection.content && subsection.content.length > 0
+                  ? subsection.content.map(item => (
+                    new Paragraph({
+                      alignment: AlignmentType.JUSTIFIED,
+                      bullet: {
+                        level: 0
+                      },
+                      indent: {
+                        left: 350
+                      },
+                      children: [
+                        new TextRun({
+                          text: item,
+                          size: 22,
+                          font: "Calibri",
+                          color: '000000'
                         })
-                      ))
-                    : []
-                  )
+                      ]
+                    })
+                  ))
+                  : []
+                )
               ]),
-              
+
               // Technical Skills Section
               new Paragraph({
                 spacing: {
@@ -1535,14 +1457,14 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                   })
                 ]
               }),
-              
+
               // Technical Skills Content
               ...createTechnicalSkills(resumeData)
             ]
           }
         ]
       });
-      
+
       // Generate and save the document
       const blob = await Packer.toBlob(doc);
       saveAs(blob, `${resumeData.name || 'Resume'}.docx`);
@@ -1555,18 +1477,18 @@ const GeneratedResume = ({ resumeData, onBack }) => {
 
   return (
     <div className="max-w-4xl mx-auto animate-slide-up">
-      
+
       {/* Add PricingDisplay component */}
       <PricingDisplay resumeData={resumeData} />
-      
+
       {/* Header Section */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-ocean-dark mb-2">Generated Resume</h2>
       </div>
-      
+
       {/* Action Buttons */}
       <div className="flex justify-center space-x-4 mb-8">
-        <button 
+        <button
           onClick={handlePrint}
           className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg flex items-center transition-colors"
         >
@@ -1587,7 +1509,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         <header className="border-b-2 border-ocean-blue pb-6 mb-6">
           <h1 className="text-4xl font-bold text-center mb-3 text-ocean-dark">{resumeData.name || 'Full Name'}</h1>
           <p className="text-xl text-center text-ocean-blue mb-4 font-medium">{resumeData.title || 'Professional Title'}</p>
-          
+
           {resumeData.requisitionNumber && (
             <p className="text-center text-gray-600 bg-gray-50 py-2 px-4 rounded-lg inline-block">
               <span className="font-medium">Requisition Number:</span> {resumeData.requisitionNumber}
@@ -1596,12 +1518,12 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         </header>
 
         {/* Professional Summary */}
-        {(resumeData.professionalSummary && resumeData.professionalSummary.length > 0) || 
-         (resumeData.summarySections && resumeData.summarySections.length > 0) ||
-         (resumeData.subsections && resumeData.subsections.length > 0) ? (
+        {(resumeData.professionalSummary && resumeData.professionalSummary.length > 0) ||
+          (resumeData.summarySections && resumeData.summarySections.length > 0) ||
+          (resumeData.subsections && resumeData.subsections.length > 0) ? (
           <section className="mb-6">
             <h2 className="text-xl font-semibold border-b-2 border-ocean-blue pb-2 mb-4 text-ocean-dark">Professional Summary</h2>
-            
+
             {/* Main summary points */}
             {resumeData.professionalSummary && resumeData.professionalSummary.length > 0 && (
               <ul className="list-disc pl-5 space-y-1 mb-4">
@@ -1610,28 +1532,28 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                 ))}
               </ul>
             )}
-            
+
             {/* Summary subsections - support both formats */}
-            {(resumeData.summarySections || resumeData.subsections) && 
-             ((resumeData.summarySections && resumeData.summarySections.length > 0) || 
-              (resumeData.subsections && resumeData.subsections.length > 0)) && (
-              <div className="mt-4 space-y-3">
-                {(resumeData.summarySections || resumeData.subsections).map((subsection, index) => (
-                  <div key={index} className="border-l-2 border-blue-100 pl-3 py-1">
-                    {subsection.title && (
-                      <h4 className="font-medium text-gray-800">{subsection.title}</h4>
-                    )}
-                    {subsection.content && subsection.content.length > 0 ? (
-                      <ul className="list-disc pl-5 space-y-1">
-                        {subsection.content.map((item, itemIndex) => (
-                          <li key={itemIndex} className="text-gray-800">{item}</li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            )}
+            {(resumeData.summarySections || resumeData.subsections) &&
+              ((resumeData.summarySections && resumeData.summarySections.length > 0) ||
+                (resumeData.subsections && resumeData.subsections.length > 0)) && (
+                <div className="mt-4 space-y-3">
+                  {(resumeData.summarySections || resumeData.subsections).map((subsection, index) => (
+                    <div key={index} className="border-l-2 border-blue-100 pl-3 py-1">
+                      {subsection.title && (
+                        <h4 className="font-medium text-gray-800">{subsection.title}</h4>
+                      )}
+                      {subsection.content && subsection.content.length > 0 ? (
+                        <ul className="list-disc pl-5 space-y-1">
+                          {subsection.content.map((item, itemIndex) => (
+                            <li key={itemIndex} className="text-gray-800">{item}</li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              )}
           </section>
         ) : null}
 
@@ -1639,7 +1561,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         {resumeData.employmentHistory && resumeData.employmentHistory.length > 0 && (
           <section className="mb-6">
             <h2 className="text-xl font-semibold border-b-2 border-ocean-blue pb-2 mb-4 text-ocean-dark">Employment History</h2>
-            
+
             {resumeData.employmentHistory.map((job, index) => (
               <div key={index} className="mb-5">
                 <div className="flex justify-between items-start">
@@ -1652,72 +1574,34 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                     <p className="text-gray-600">{job.location || 'Location'}</p>
                   </div>
                 </div>
-                {job.project && (
-                  <p className="my-2">
-                    <span className="font-medium">Project: </span>
-                    <span className="text-gray-800 font-bold">{job.project}</span>
-                  </p>
-                )}
-                
-                {job.projectRole && (
-                  <p className="my-2">
-                    <span className="font-medium">Project Role: </span>
-                    <span className="text-gray-800 font-bold">{job.projectRole}</span>
-                  </p>
-                )}
-                
-                {job.projectDescription && (
-                  <p className="my-2">
-                    <span className="font-medium">Project Description: </span>
-                    <span className="text-gray-800">{job.projectDescription}</span>
-                  </p>
-                )}
-                
-                {job.projectEnvironment && (
-                  <p className="my-2">
-                    <span className="font-medium">Project Environment: </span>
-                    <span className="text-gray-800">{job.projectEnvironment}</span>
-                  </p>
-                )}
-                
-                {job.client && (
-                  <p className="my-2">
-                    <span className="font-medium">Client: </span>
-                    <span className="text-gray-800 font-bold">{job.client}</span>
-                  </p>
-                )}
-                
-                {job.customer && (
-                  <p className="my-2">
-                    <span className="font-medium">Customer: </span>
-                    <span className="text-gray-800 font-bold">{job.customer}</span>
-                  </p>
-                )}
-                
+
+
                 {job.description && (
                   <p className="my-2 text-gray-800">{job.description}</p>
                 )}
 
-                {/* Client Projects */}
-                {job.clientProjects && job.clientProjects.length > 0 && (
+                {/* Projects */}
+                {job.projects && job.projects.length > 0 && (
                   <div className="mt-3">
-                    <p className="font-medium mb-2">Client Projects:</p>
-                    {job.clientProjects.map((clientProject, projIndex) => (
+                    <p className="font-medium mb-2">Projects:</p>
+                    {job.projects.map((project, projIndex) => (
                       <div key={projIndex} className="border-l-2 border-blue-200 pl-4 mb-3 bg-blue-50 p-3 rounded">
                         <h5 className="font-medium text-blue-800">
-                          {clientProject.clientName && clientProject.projectName 
-                            ? `${clientProject.clientName} - ${clientProject.projectName}`
-                            : clientProject.clientName || clientProject.projectName || `Project ${projIndex + 1}`}
+                          {project.projectName || 'Project'}
+                          {project.projectLocation && ` - ${project.projectLocation}`}
                         </h5>
-                        {clientProject.period && (
-                          <p className="text-sm text-gray-600 mb-1">Duration: {clientProject.period}</p>
+                        {project.period && (
+                          <p className="text-sm text-gray-600 mb-1">Duration: {project.period}</p>
                         )}
-                        {clientProject.projectDescription && (
-                          <p className="text-gray-700 mb-2">{clientProject.projectDescription}</p>
+                        {project.keyTechnologies && (
+                          <p className="text-sm text-gray-600 mb-2">
+                            <span className="font-medium">Technologies: </span>
+                            {project.keyTechnologies}
+                          </p>
                         )}
-                        {clientProject.responsibilities && clientProject.responsibilities.length > 0 && (
+                        {project.projectResponsibilities && project.projectResponsibilities.length > 0 && (
                           <ul className="list-disc pl-5 space-y-1">
-                            {clientProject.responsibilities.map((resp, respIndex) => (
+                            {project.projectResponsibilities.map((resp, respIndex) => (
                               <li key={respIndex} className="text-gray-800 text-sm">{resp}</li>
                             ))}
                           </ul>
@@ -1737,7 +1621,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                     </ul>
                   </div>
                 )}
-                
+
                 {/* Subsections */}
                 {job.subsections && job.subsections.length > 0 && job.subsections.map((subsection, subIndex) => (
                   <div key={subIndex} className="mt-3">
@@ -1753,32 +1637,16 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                     )}
                   </div>
                 ))}
-                
+
                 {job.keyTechnologies && (
                   <p className="mt-2">
                     <span className="font-medium">Key Technologies/Skills: </span>
                     <span className="text-gray-800">{job.keyTechnologies}</span>
                   </p>
                 )}
-                
-                {job.environment && (
-                  <p className="mt-2">
-                    <span className="font-medium">Environment: </span>
-                    <span className="text-gray-800">{job.environment}</span>
-                  </p>
-                )}
-                
-                {/* Achievements */}
-                {job.achievements && job.achievements.length > 0 && (
-                  <div className="mt-3">
-                    <p className="font-medium">Achievements:</p>
-                    <ul className="list-disc pl-5 space-y-1">
-                      {job.achievements.map((achievement, achieveIndex) => (
-                        <li key={achieveIndex} className="text-gray-800">{achievement}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+
+
+
               </div>
             ))}
           </section>
@@ -1788,7 +1656,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         {resumeData.education && resumeData.education.length > 0 && (
           <section className="mb-6">
             <h2 className="text-xl font-semibold border-b pb-2 mb-3">Education</h2>
-            
+
             {resumeData.education.map((edu, index) => (
               <div key={index} className="mb-3">
                 <div className="flex justify-between items-start">
@@ -1811,7 +1679,7 @@ const GeneratedResume = ({ resumeData, onBack }) => {
         {resumeData.certifications && resumeData.certifications.length > 0 && (
           <section className="mb-6">
             <h2 className="text-xl font-semibold border-b pb-2 mb-3">Certifications</h2>
-            
+
             {resumeData.certifications.map((cert, index) => (
               <div key={index} className="mb-3">
                 <h3 className="font-bold">{cert.name || 'Certification'}</h3>
@@ -1832,10 +1700,10 @@ const GeneratedResume = ({ resumeData, onBack }) => {
 
         {/* Technical Skills */}
         {(resumeData.technicalSkills && Object.keys(resumeData.technicalSkills).length > 0) ||
-         (resumeData.skillCategories && resumeData.skillCategories.length > 0) ? (
+          (resumeData.skillCategories && resumeData.skillCategories.length > 0) ? (
           <section className="mb-6">
             <h2 className="text-xl font-semibold border-b pb-2 mb-3">Technical Skills</h2>
-            
+
             {/* Legacy format skills */}
             {resumeData.technicalSkills && Object.keys(resumeData.technicalSkills).length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -1847,21 +1715,21 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                 ))}
               </div>
             )}
-            
+
             {/* Nested skill categories */}
             {resumeData.skillCategories && resumeData.skillCategories.length > 0 && (
               <div className="space-y-5">
                 {resumeData.skillCategories.map((category, index) => (
                   <div key={index} className="border-l-4 border-blue-200 pl-4 py-2">
                     <h3 className="font-bold text-lg text-blue-800">{category.categoryName || 'Category'}</h3>
-                    
+
                     {/* Main skills */}
                     {category.skills && category.skills.length > 0 && (
                       <p className="text-gray-800 mb-3 mt-1">
                         {Array.isArray(category.skills) ? category.skills.join(', ') : category.skills}
                       </p>
                     )}
-                    
+
                     {/* Subcategories */}
                     {category.subCategories && Array.isArray(category.subCategories) && category.subCategories.length > 0 && (
                       <div className="ml-4 mt-3 space-y-3">
@@ -1870,10 +1738,10 @@ const GeneratedResume = ({ resumeData, onBack }) => {
                             <h4 className="font-medium text-gray-700">{subCategory.name || 'Subcategory'}</h4>
                             {subCategory.skills && subCategory.skills.length > 0 && (
                               <ul className="list-disc pl-5 space-y-1 mt-1">
-                                {Array.isArray(subCategory.skills) ? 
+                                {Array.isArray(subCategory.skills) ?
                                   subCategory.skills.map((skill, skillIndex) => (
                                     <li key={skillIndex} className="text-gray-800">{skill}</li>
-                                  )) : 
+                                  )) :
                                   <li className="text-gray-800">{subCategory.skills}</li>
                                 }
                               </ul>

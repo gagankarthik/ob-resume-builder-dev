@@ -7,6 +7,7 @@ from fastapi.responses import StreamingResponse
 import os
 import logging
 import json
+from datetime import datetime
 
 from utils.file_parser import extract_text_from_file
 from utils.ai_parser import stream_resume_processing
@@ -18,6 +19,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Resume Builder API", version="1.0.0")
+
+# Note: CORS is handled by AWS Lambda Function URLs automatically
 
 @app.get("/")
 async def root():
@@ -35,21 +38,35 @@ async def stream_resume_processing_endpoint(file: UploadFile = File(...)):
             temp_file.write(content)
 
         try:
-            # Extract text from file - no timeout worries with Function URLs
+            # Extract text from file - no timeout worries with Function URLs!
             extracted_text = extract_text_from_file(temp_file_path)
 
 
             async def generate_stream():
-                async for chunk in stream_resume_processing(extracted_text):
-                    yield f"data: {json.dumps(chunk)}\n\n"
-                yield "data: [DONE]\n\n"
+                try:
+                    async for chunk in stream_resume_processing(extracted_text):
+                        # Ensure proper SSE format with explicit flush
+                        event_data = json.dumps(chunk, ensure_ascii=False)
+                        yield f"data: {event_data}\n\n"
+                        
+                    # Send completion signal
+                    yield "data: [DONE]\n\n"
+                except Exception as stream_error:
+                    logger.error(f"❌ Streaming error: {stream_error}")
+                    error_data = json.dumps({
+                        'type': 'error',
+                        'message': f'Streaming error: {str(stream_error)}',
+                        'timestamp': datetime.now().isoformat()
+                    })
+                    yield f"data: {error_data}\n\n"
 
             return StreamingResponse(
                 generate_stream(),
                 media_type="text/event-stream",
                 headers={
                     "Cache-Control": "no-cache",
-                    "Connection": "keep-alive"
+                    "Connection": "keep-alive",
+                    "X-Accel-Buffering": "no"  # Disable nginx buffering
                 }
             )
         finally:

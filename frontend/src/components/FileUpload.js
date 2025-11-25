@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { FiUpload, FiFileText, FiAlertCircle, FiCheckCircle, FiLoader, FiFile } from 'react-icons/fi';
+import { FiUpload, FiFileText, FiAlertCircle, FiLoader, FiFile } from 'react-icons/fi';
 
 // API base URL - Use environment variable for production
 const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -9,14 +9,8 @@ const FileUpload = ({ onResumeDataExtracted, setLoading }) => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState('');
   
-  // 🚀 STREAMING STATE MANAGEMENT
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [streamingProgress, setStreamingProgress] = useState(0);
-  const [currentMessage, setCurrentMessage] = useState('');
-  const [detectedSections, setDetectedSections] = useState([]);
-  const [completedSections, setCompletedSections] = useState([]);
-  const [estimatedCost, setEstimatedCost] = useState(0);
-  const [processingStartTime, setProcessingStartTime] = useState(null);
+  // Simple loading state
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Handle file drop using react-dropzone
   const onDrop = useCallback((acceptedFiles) => {
@@ -78,22 +72,17 @@ const FileUpload = ({ onResumeDataExtracted, setLoading }) => {
       return;
     }
     
-    // Reset streaming state
-    setIsStreaming(true);
+    // Reset state
+    setIsProcessing(true);
     setLoading(true);
     setError('');
-    setStreamingProgress(0);
-    setCurrentMessage('');
-    setDetectedSections([]);
-    setCompletedSections([]);
-    setProcessingStartTime(Date.now());
     
     try {
       // Create form data for file upload
       const formData = new FormData();
       formData.append('file', file);
       
-      // 🔥 INITIATE STREAMING UPLOAD TO NEW ENDPOINT
+      // Simple fetch to process resume
       const response = await fetch(`${API_BASE_URL}api/stream-resume-processing`, {
         method: 'POST',
         body: formData,
@@ -103,7 +92,7 @@ const FileUpload = ({ onResumeDataExtracted, setLoading }) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
-      // 🌊 SETUP SERVER-SENT EVENTS READER
+      // Read the stream for final result only
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
@@ -111,99 +100,47 @@ const FileUpload = ({ onResumeDataExtracted, setLoading }) => {
       while (true) {
         const { value, done } = await reader.read();
         
-        if (done) {
-          break;
-        }
+        if (done) break;
         
-        // Decode the chunk and add to buffer
-        buffer += decoder.decode(value, { stream: true });
+        const chunk = decoder.decode(value, { stream: true });
+        buffer += chunk;
         
-        // Process complete events
         const events = buffer.split('\n\n');
-        buffer = events.pop(); // Keep incomplete event in buffer
+        buffer = events.pop();
         
         for (const event of events) {
           if (event.startsWith('data: ')) {
             try {
-              const data = JSON.parse(event.slice(6));
-              handleStreamingEvent(data);
+              const eventData = event.slice(6);
+              if (eventData === '[DONE]') continue;
+              
+              const data = JSON.parse(eventData);
+              
+              // Only handle final data and errors
+              if (data.type === 'final_data') {
+                const sanitizedData = sanitizeResumeData(data.data);
+                onResumeDataExtracted(sanitizedData);
+                return;
+              } else if (data.type === 'error') {
+                setError(data.message || 'Processing error');
+                return;
+              }
             } catch (parseError) {
-              // Silently ignore parse errors
+              // Ignore parse errors
             }
           }
         }
       }
       
-    } catch (streamingError) {
-      setError(`Streaming failed: ${streamingError.message}`);
+    } catch (processingError) {
+      setError(`Processing failed: ${processingError.message}`);
     } finally {
-      setIsStreaming(false);
+      setIsProcessing(false);
       setLoading(false);
     }
   };
   
-  // 📊 HANDLE INDIVIDUAL STREAMING EVENTS
-  const handleStreamingEvent = (data) => {
-    
-    switch (data.type) {
-      case 'connection':
-        setCurrentMessage('Connected to streaming server');
-        break;
-        
-      case 'progress':
-        setStreamingProgress(data.progress || 0);
-        setCurrentMessage(data.message || '');
-        break;
-        
-      case 'sections_detected':
-        setDetectedSections(data.sections || []);
-        setCurrentMessage(data.message || '');
-        setStreamingProgress(data.progress || 40);
-        break;
-        
-      case 'section_processing':
-        setCurrentMessage(data.message || '');
-        setStreamingProgress(data.progress || 50);
-        break;
-        
-      case 'section_skip':
-        setCurrentMessage(`Skipping ${data.section} section - ${data.message}`);
-        // If it's the certifications section, add it to completed sections
-        if (data.section === 'certifications') {
-          setCompletedSections(prev => [...prev, data.section]);
-        }
-        break;
-        
-      case 'section_complete':
-        setCompletedSections(prev => [...prev, data.section]);
-        setCurrentMessage(data.message || '');
-        setStreamingProgress(data.progress || 70);
-        
-        // Calculate estimated cost (rough) - GPT-4o-mini pricing
-        const tokenEstimate = JSON.stringify(data.data).length / 4;
-        setEstimatedCost(prev => prev + (tokenEstimate * 0.0006 / 1000)); // GPT-4o-mini output token pricing ($0.0006 per 1K tokens)
-        break;
-        
-      case 'final_data':
-        setStreamingProgress(100);
-        setCurrentMessage('Processing complete! 🎉');
-        
-        // Validate and sanitize final data before passing to parent
-        if (data.data) {
-          const sanitizedData = sanitizeResumeData(data.data);
-          onResumeDataExtracted(sanitizedData);
-        }
-        
-        break;
-        
-      case 'error':
-        setError(data.message || 'Unknown streaming error');
-        break;
-        
-      default:
-        // Handle unknown event types silently
-    }
-  };
+
   
   // 🔧 DATA SANITIZATION FUNCTION
   const sanitizeResumeData = (data) => {
@@ -229,29 +166,19 @@ const FileUpload = ({ onResumeDataExtracted, setLoading }) => {
         roleName: job.roleName || '',
         workPeriod: job.workPeriod || '',
         location: job.location || '',
-        description: job.description || '',
-        project: job.project || '',
-        customer: job.customer || '',
-        projectRole: job.projectRole || '',
-        projectDescription: job.projectDescription || '',
-        projectEnvironment: job.projectEnvironment || '',
         responsibilities: Array.isArray(job.responsibilities) ? job.responsibilities : (job.responsibilities ? [job.responsibilities] : []),
-        client: job.client || '',
-        clientProjects: Array.isArray(job.clientProjects) ? job.clientProjects.map(clientProject => ({
-          clientName: clientProject.clientName || '',
-          projectName: clientProject.projectName || '',
-          projectDescription: clientProject.projectDescription || '',
-          responsibilities: Array.isArray(clientProject.responsibilities) ? clientProject.responsibilities : [],
-          period: clientProject.period || ''
+        projects: Array.isArray(job.projects) ? job.projects.map(project => ({
+          projectName: project.projectName || '',
+          projectLocation: project.projectLocation || '',
+          projectResponsibilities: Array.isArray(project.projectResponsibilities) ? project.projectResponsibilities : [],
+          keyTechnologies: project.keyTechnologies || '',
+          period: project.period || ''
         })) : [],
         subsections: Array.isArray(job.subsections) ? job.subsections.map(subsection => ({
           title: subsection.title || '',
           content: Array.isArray(subsection.content) ? subsection.content : []
         })) : [],
-        keyTechnologies: job.keyTechnologies || '',
-        environment: job.environment || '',
-        achievements: Array.isArray(job.achievements) ? job.achievements : [],
-        additionalFields: job.additionalFields || {}
+        keyTechnologies: job.keyTechnologies || ''
       }));
       
       // Ensure summary subsections have proper structure
@@ -408,72 +335,16 @@ const FileUpload = ({ onResumeDataExtracted, setLoading }) => {
         </div>
       )}
       
-      {/* Streaming Processing Interface */}
-      {isStreaming && (
+      {/* Simple Loading Interface */}
+      {isProcessing && (
         <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-ocean-blue rounded-2xl p-8 mb-8 shadow-xl animate-fade-in">
-          <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold text-ocean-dark mb-2">⚡ AI Processing in Progress</h3>
-            <p className="text-ocean-blue font-medium">{currentMessage}</p>
+          <div className="text-center">
+            <div className="flex items-center justify-center mb-4">
+              <FiLoader className="animate-spin text-4xl text-ocean-blue mr-4" />
+              <h3 className="text-2xl font-bold text-ocean-dark">Processing Resume...</h3>
+            </div>
+            <p className="text-ocean-blue font-medium">Please wait while we analyze your resume</p>
           </div>
-          
-          {/* Enhanced Progress Bar */}
-          <div className="relative mb-6">
-            <div className="flex justify-between text-sm text-ocean-dark mb-2 font-medium">
-              <span>Progress</span>
-              <span>{streamingProgress}%</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-              <div 
-                className="bg-gradient-to-r from-ocean-blue to-blue-400 h-4 rounded-full transition-all duration-700 ease-out relative"
-                style={{ width: `${streamingProgress}%` }}
-              >
-                <div className="absolute inset-0 bg-white bg-opacity-30 animate-pulse"></div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Detected Sections */}
-          {detectedSections.length > 0 && (
-            <div className="mb-6">
-              <h4 className="text-lg font-semibold text-ocean-dark mb-3">📋 Resume Sections Detected:</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {detectedSections.map((section, index) => (
-                  <div 
-                    key={index}
-                    className={`flex items-center px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
-                      completedSections.includes(section) 
-                        ? 'bg-green-100 text-green-800 shadow-md' 
-                        : 'bg-white text-ocean-dark border border-gray-200'
-                    }`}
-                  >
-                    {completedSections.includes(section) ? (
-                      <FiCheckCircle className="mr-2 text-green-600" />
-                    ) : (
-                      <FiLoader className="mr-2 animate-spin text-ocean-blue" />
-                    )}
-                    <span className="capitalize">{section}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {/* Cost Tracking */}
-          {estimatedCost > 0 && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-green-700 font-medium">💰 Estimated Processing Cost:</span>
-                <span className="font-bold text-green-800">${estimatedCost.toFixed(6)}</span>
-              </div>
-            </div>
-          )}
-          
-          {/* Processing Time */}
-          {processingStartTime && (
-            <div className="text-center text-sm text-ocean-blue font-medium">
-              ⏱️ Processing for {((Date.now() - processingStartTime) / 1000).toFixed(1)}s
-            </div>
-          )}
         </div>
       )}
       
@@ -481,17 +352,17 @@ const FileUpload = ({ onResumeDataExtracted, setLoading }) => {
       <div className="flex justify-center">
         <button 
           onClick={handleStreamingSubmit}
-          disabled={!file || isStreaming}
+          disabled={!file || isProcessing}
           className={`px-8 py-4 rounded-xl text-white font-semibold text-lg flex items-center transition-all duration-300 transform hover:scale-105 ${
-            file && !isStreaming 
+            file && !isProcessing 
               ? 'bg-gradient-to-r from-ocean-blue to-blue-500 hover:from-blue-600 hover:to-blue-700 shadow-lg' 
               : 'bg-gray-400 cursor-not-allowed'
           }`}
         >
-          {isStreaming ? (
+          {isProcessing ? (
             <>
               <FiLoader className="animate-spin mr-3 text-xl" />
-              Processing Resume...
+              Processing...
             </>
           ) : (
             <>
