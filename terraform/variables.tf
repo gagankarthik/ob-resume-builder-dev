@@ -1,15 +1,15 @@
 variable "aws_region" {
   description = "AWS region for resources"
   type        = string
-  default     = "us-east-1"
+  default     = "us-east-2"
 }
 
 variable "environment" {
-  description = "Environment name (testing,prod)"
+  description = "Environment name (dev, prod)"
   type        = string
   validation {
-    condition     = contains(["testing","prod"], var.environment)
-    error_message = "Environment must be 'testing','prod'."
+    condition     = contains(["dev", "prod"], var.environment)
+    error_message = "Environment must be either 'dev' or 'prod'."
   }
 }
 
